@@ -3,8 +3,6 @@ package com.iabur.kafkademo.service.impl;
 import com.iabur.kafkademo.model.ProductCreateRequestModel;
 import com.iabur.kafkademo.service.ProductCreatedEvent;
 import com.iabur.kafkademo.service.ProductService;
-
-
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
@@ -26,10 +24,12 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public String createProduct(ProductCreateRequestModel productCreateRequestModel) throws ExecutionException, InterruptedException {
         String productId = UUID.randomUUID().toString();
-        ProductCreatedEvent productCreatedEvent = new ProductCreatedEvent(productId, productCreateRequestModel.getTitle(),
-                productCreateRequestModel.getPrice(), productCreateRequestModel.getDescription());
+        ProductCreatedEvent productCreatedEvent = new ProductCreatedEvent(productId, productCreateRequestModel.getTitle(), productCreateRequestModel.getPrice(), productCreateRequestModel.getDescription());
 
+        logger.info("Sending product created event to kafka topic");
         SendResult<String, Object> future = kafkaTemplate.send(TOPIC, productId, productCreatedEvent).get();
+        //partition and offset, topic
+        logger.info("Message sent to partition " + future.getRecordMetadata().partition() + " with offset " + future.getRecordMetadata().offset() + " to topic " + future.getRecordMetadata().topic());
 
         if (future.getRecordMetadata() != null) {
             logger.info("Product created successfully");
