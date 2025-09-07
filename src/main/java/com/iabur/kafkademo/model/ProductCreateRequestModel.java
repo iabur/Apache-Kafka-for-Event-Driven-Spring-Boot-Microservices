@@ -1,4 +1,4 @@
-package com.iabur.kafkademo.request;
+package com.iabur.kafkademo.model;
 
 public class ProductCreateRequestModel {
     private String title;

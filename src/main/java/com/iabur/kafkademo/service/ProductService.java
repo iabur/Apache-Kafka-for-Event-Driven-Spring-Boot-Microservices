@@ -1,6 +1,6 @@
 package com.iabur.kafkademo.service;
 
-import com.iabur.kafkademo.request.ProductCreateRequestModel;
+import com.iabur.kafkademo.model.ProductCreateRequestModel;
 
 import java.util.concurrent.ExecutionException;
 
