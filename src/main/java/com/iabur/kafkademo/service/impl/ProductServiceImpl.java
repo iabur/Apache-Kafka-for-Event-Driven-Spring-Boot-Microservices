@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 
 @Service
@@ -25,20 +26,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public String createProduct(ProductCreateRequestModel productCreateRequestModel) {
+    public String createProduct(ProductCreateRequestModel productCreateRequestModel) throws ExecutionException, InterruptedException {
         String productId = UUID.randomUUID().toString();
         ProductCreatedEvent productCreatedEvent = new ProductCreatedEvent(productId, productCreateRequestModel.getTitle(),
                 productCreateRequestModel.getPrice(), productCreateRequestModel.getDescription());
 
-        CompletableFuture<SendResult<String, Object>> future = kafkaTemplate.send(TOPIC, productId, productCreatedEvent);
+        SendResult<String, Object> future = kafkaTemplate.send(TOPIC, productId, productCreatedEvent).get();
 
-        future.whenComplete((result, ex) -> {
-            if (ex != null) {
-                logger.severe("Error while sending message to kafka topic");
-            } else {
-                logger.info("Message sent to kafka topic " + TOPIC + " with offset " + result.getRecordMetadata().offset());
-            }
-        });
+        if (future.getRecordMetadata() != null) {
+            logger.info("Product created successfully");
+        }
 
         return productId;
     }
