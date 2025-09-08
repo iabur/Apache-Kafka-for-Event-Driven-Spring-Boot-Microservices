@@ -1,0 +1,21 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.iabur'
+version = '0.0.1-SNAPSHOT'
+description = 'core'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(24)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+}
