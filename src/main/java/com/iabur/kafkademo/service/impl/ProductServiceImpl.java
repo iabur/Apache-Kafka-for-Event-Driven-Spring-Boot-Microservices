@@ -1,7 +1,7 @@
 package com.iabur.kafkademo.service.impl;
 
+import com.iabur.core.ProductCreatedEvent;
 import com.iabur.kafkademo.model.ProductCreateRequestModel;
-import com.iabur.kafkademo.service.ProductCreatedEvent;
 import com.iabur.kafkademo.service.ProductService;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
