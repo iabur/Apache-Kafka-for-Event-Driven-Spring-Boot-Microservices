@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'maven-publish'
 }
 
 group = 'com.iabur'
@@ -18,4 +19,16 @@ repositories {
 
 dependencies {
 
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+
+            groupId = 'com.iabur'
+            artifactId = 'core'
+            version = '0.0.1-SNAPSHOT'
+        }
+    }
 }
