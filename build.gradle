@@ -16,10 +16,11 @@ java {
 
 repositories {
     mavenCentral()
+    mavenLocal()  // Add local repository to find the core JAR
 }
 
 dependencies {
-    implementation project(':core')
+    implementation 'com.iabur:core:0.0.1-SNAPSHOT' 
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.kafka:spring-kafka'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
