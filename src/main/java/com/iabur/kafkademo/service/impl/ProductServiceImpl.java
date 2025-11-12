@@ -3,6 +3,7 @@ package com.iabur.kafkademo.service.impl;
 import com.iabur.core.ProductCreatedEvent;
 import com.iabur.kafkademo.model.ProductCreateRequestModel;
 import com.iabur.kafkademo.service.ProductService;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
@@ -26,8 +27,11 @@ public class ProductServiceImpl implements ProductService {
         String productId = UUID.randomUUID().toString();
         ProductCreatedEvent productCreatedEvent = new ProductCreatedEvent(productId, productCreateRequestModel.getTitle(), productCreateRequestModel.getPrice(), productCreateRequestModel.getDescription());
 
+        ProducerRecord<String, Object> producerRecord = new ProducerRecord<>(TOPIC, productId, productCreatedEvent);
+        producerRecord.headers().add("messageId", UUID.randomUUID().toString().getBytes());
+
         logger.info("Sending product created event to kafka topic");
-        SendResult<String, Object> future = kafkaTemplate.send(TOPIC, productId, productCreatedEvent).get();
+        SendResult<String, Object> future = kafkaTemplate.send(producerRecord).get();
         //partition and offset, topic
         logger.info("Message sent to partition " + future.getRecordMetadata().partition() + " with offset " + future.getRecordMetadata().offset() + " to topic " + future.getRecordMetadata().topic());
 
