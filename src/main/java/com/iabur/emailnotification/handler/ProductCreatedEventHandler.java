@@ -8,6 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.annotation.KafkaHandler;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
@@ -24,7 +27,9 @@ public class ProductCreatedEventHandler {
     }
 
     @KafkaHandler
-    public void handle(ProductCreatedEvent event) {
+    public void handle(@Payload ProductCreatedEvent event,
+                       @Header("messageId") String messageId,
+                       @Header(KafkaHeaders.RECEIVED_KEY) String messageKey) {
         logger.info("Product created event received: {}", event != null ? event.getTitle() : "<null>");
 
         try {
